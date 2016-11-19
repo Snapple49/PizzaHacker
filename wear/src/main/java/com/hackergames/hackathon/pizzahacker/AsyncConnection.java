@@ -49,10 +49,10 @@ public class AsyncConnection extends AsyncTask<Void, Void, Void> {
                 int frontIndex = 0, toIndex = 0;
                 for (int i = 0; i < response.size(); i++) {
                     String s = response.get(i);
-                    if (s.contains("{"))
-                        frontIndex = i + 1;
-                    if (s.contains("}"))
-                        toIndex = i;
+                    if (s.contains("<body>"))
+                        frontIndex = i + 2;
+                    if (s.contains("</body>"))
+                        toIndex = i-2;
                 }
                 List<String> reducedResponse = response.subList(frontIndex, toIndex);
                 JSONObject responseJson = new JSONObject();
@@ -60,8 +60,6 @@ public class AsyncConnection extends AsyncTask<Void, Void, Void> {
                     String[] split = s.split(":");
                     responseJson.put(split[0].trim(), split[1].trim());
                 }
-                System.out.println(inputJson);
-                System.out.println(responseJson);
                 main.setResponseJson(responseJson);
 
             } catch (MalformedURLException e) {

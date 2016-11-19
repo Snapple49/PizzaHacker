@@ -15,11 +15,13 @@ import java.util.Scanner;
 
 public class Auxiliary {
 
+
     public static int getTravelTime(String from, String to) throws IOException, JSONException {
         //build URL
         String distancematrixURL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=" + from + "&destinations=" + to + "&key=";
         //distancematrixURL += URLEncoder.encode(addr, "UTF-8");
         URL url = new URL(distancematrixURL);
+
 
         // read from the URL
         Scanner scan = new Scanner(url.openStream());

@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.wearable.view.WatchViewStub;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.MutableBoolean;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,8 +27,13 @@ import org.json.JSONObject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends Activity {
     private static final double maxCooking = 6*5-1;
@@ -44,6 +50,7 @@ public class MainActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private double percentageCooked;
+    private int time;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         main = this;
@@ -80,10 +87,15 @@ public class MainActivity extends Activity {
 
     public void setResponseJson(JSONObject response){
         this.responseFromServer = response;
-        System.out.println(response.toString());
+    }
+
+    public void setTimeBetween(int time){
+        this.time = time;
     }
 
     public void checkStatus(){
+        toggleBoolean bool = new toggleBoolean(true);
+        bool.toggle();
         EditText t = (EditText)findViewById(R.id.inputCode);
         JSONObject input = new JSONObject();
         try {
@@ -93,6 +105,7 @@ public class MainActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         AsyncConnection as = new AsyncConnection(input, main);
         as.execute();
         TextView tv = (TextView) findViewById(R.id.jsonResponseField);
@@ -123,7 +136,8 @@ public class MainActivity extends Activity {
                     tv.setText("Pizza is ready");
                 }else if(orderStatus.equals("850")){
                     //Leaving store
-                    Auxiliary.getTravelTime("Nijmegen","Utrecht");
+                    AsyncConnection2 async2 = new AsyncConnection2("Nijmegen","Utrect",main);
+                    async2.execute();
                     tv.setText("Courier is on his way");
                 }else if(orderStatus.equals("867")){
                     //Order complete
@@ -134,8 +148,6 @@ public class MainActivity extends Activity {
                 }
 
             } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -175,6 +187,16 @@ public class MainActivity extends Activity {
     protected void onPause() {
         h.removeCallbacks(runnable); //stop handler when activity not visible
         super.onPause();
+    }
+
+    class toggleBoolean{
+        boolean bool;
+        public toggleBoolean(boolean bool){
+            this.bool = bool;
+        }
+        public void toggle(){
+            bool = !bool;
+        }
     }
 /////////////////////////////////
 }
