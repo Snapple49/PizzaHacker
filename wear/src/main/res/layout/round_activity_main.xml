@@ -53,10 +53,10 @@
         tools:textColor="@color/blue"
         android:textColor="@color/blue" />
 
-    <!--<com.hackergames.hackathon.pizzahacker.PizzaView
+    <com.hackergames.hackathon.pizzahacker.PizzaView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/pizzaView"
-        />-->
+        />
 
 </RelativeLayout>

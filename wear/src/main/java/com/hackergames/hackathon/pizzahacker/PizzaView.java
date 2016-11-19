@@ -4,17 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.View;
-
-import org.w3c.dom.Attr;
-
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,7 +15,8 @@ import java.util.List;
  */
 
 class PizzaView extends View {
-
+    private boolean shouldAnimate;
+    private float percentage;
     public List<Drawable> pizzaParts;
 
     public PizzaView(Context context) {
@@ -44,6 +38,14 @@ class PizzaView extends View {
 
     }
 
+    public void setPercentage(float percentage){
+        this.percentage = percentage;
+    }
+
+    public void setShouldAnimate(boolean value){
+        this.shouldAnimate = value;
+    }
+
 
 
     @Override
@@ -55,31 +57,47 @@ class PizzaView extends View {
     public void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
+        long millisec = System.currentTimeMillis();
+        double degrees = ((millisec/1000)%60)/(2*Math.PI);
+        double degrees2 =(((millisec/1000/60)/60)%24)/(2*Math.PI);
+        Paint linePaint = new Paint();
+        linePaint.setStrokeWidth(5);
+        linePaint.setColor(Color.WHITE);
+        canvas.drawLine((float)(getWidth()/2),(float)(getHeight()/2),(float)(getHeight()/2+250*Math.cos(degrees)),(float)(getWidth()/2+250*Math.sin(degrees)), linePaint);
+        linePaint.setStrokeWidth(10);
+        canvas.drawLine((float)(getWidth()/2),(float)(getHeight()/2),(float)(getHeight()/2+250*Math.cos(degrees2)),(float)(getWidth()/2+250*Math.sin(degrees2)), linePaint);
+
+
+
+
+        System.out.println("drawOn is being called");
        // Paint p = new Paint();
         //RectF rect = new RectF(0, 0, getWidth(), getHeight());
 
         //p.setColor(Color.BLUE);
-       pizza_status((float)0.23,canvas);
+       pizza_status(canvas);
        // canvas.drawArc(rect, 270,180 , true, p);
-        /*
+
         for(Drawable d:pizzaParts){
             d.draw(canvas);
         }
-        */
+
 
 
         //rect.set(0,0,canvas.getWidth()/2, canvas.getHeight()/2);
     }
 
-    public void pizza_status(float percentage,Canvas canvas)
+    public void pizza_status(Canvas canvas)
     {
-        float angle = (float) ((percentage * 100)*3.6);
-        Paint p = new Paint();
-        p.setColor(Color.BLUE);
-        p.setAlpha(100);
-        RectF rect = new RectF(0, 0, getWidth(), getHeight());
-        //rect.bringToFront();
-        canvas.drawArc(rect, 270,angle, true, p);
+        if(shouldAnimate) {
+            float angle = -(float)((100 - (percentage * 100)) * 3.6);
+            Paint p = new Paint();
+            p.setColor(Color.GRAY);
+            p.setAlpha(100);
+            RectF rect = new RectF(0, 0, getWidth(), getHeight());
+            //rect.bringToFront();
+            canvas.drawArc(rect, 270, angle, true, p);
+        }
     }
 
 

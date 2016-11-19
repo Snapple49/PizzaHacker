@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +52,8 @@ public class MainActivity extends Activity {
     };
     private double percentageCooked;
     private int time;
+    private PizzaView pizzaview;
+    private Canvas pizzaCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         main = this;
@@ -72,7 +75,7 @@ public class MainActivity extends Activity {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mTextView = (TextView) stub.findViewById(R.id.text);
-
+                pizzaview = (PizzaView) stub.findViewById(R.id.pizzaView);
                 Button button = (Button)findViewById(R.id.codeAcceptButton);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -94,6 +97,8 @@ public class MainActivity extends Activity {
     }
 
     public void checkStatus(){
+        ((EditText)findViewById(R.id.inputCode)).setVisibility(View.INVISIBLE);
+        ((Button)findViewById(R.id.codeAcceptButton)).setVisibility(View.INVISIBLE);
         toggleBoolean bool = new toggleBoolean(true);
         bool.toggle();
         EditText t = (EditText)findViewById(R.id.inputCode);
@@ -105,7 +110,8 @@ public class MainActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        pizzaview.setPercentage((float)this.getCookingPercentage());
+        pizzaview.invalidate();
         AsyncConnection as = new AsyncConnection(input, main);
         as.execute();
         TextView tv = (TextView) findViewById(R.id.jsonResponseField);
@@ -126,10 +132,12 @@ public class MainActivity extends Activity {
                     tv.setText("Making pizza");
                 }else if(orderStatus.equals("820")){
                     startCooking = true;
+                    pizzaview.setShouldAnimate(true);
                     //Cooking
                     tv.setText("Cooking pizza");
                     pv.setText(""+(int)(100*getCookingPercentage()));
                 }else if(orderStatus.equals("830")){
+                    pizzaview.setShouldAnimate(false);
                     startCooking = false;
                     currentCooking = 0;
                     //Ready instore
