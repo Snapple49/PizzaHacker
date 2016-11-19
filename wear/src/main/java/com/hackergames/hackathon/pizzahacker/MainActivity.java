@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -122,6 +123,7 @@ public class MainActivity extends Activity {
                     tv.setText("Pizza is ready");
                 }else if(orderStatus.equals("850")){
                     //Leaving store
+                    Auxiliary.getTravelTime("Nijmegen","Utrecht");
                     tv.setText("Courier is on his way");
                 }else if(orderStatus.equals("867")){
                     //Order complete
@@ -132,6 +134,8 @@ public class MainActivity extends Activity {
                 }
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
