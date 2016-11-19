@@ -52,13 +52,15 @@ class PizzaView extends View {
     }
 
     @Override
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
-        Paint p = new Paint();
-        RectF rect = new RectF(0, 0, getWidth(), getHeight());
+       // Paint p = new Paint();
+        //RectF rect = new RectF(0, 0, getWidth(), getHeight());
 
-        p.setColor(Color.BLUE);
-        canvas.drawArc(rect, 90, 45, true, p);
+        //p.setColor(Color.BLUE);
+       pizza_status((float)0.23,canvas);
+       // canvas.drawArc(rect, 270,180 , true, p);
         /*
         for(Drawable d:pizzaParts){
             d.draw(canvas);
@@ -67,8 +69,19 @@ class PizzaView extends View {
 
 
         //rect.set(0,0,canvas.getWidth()/2, canvas.getHeight()/2);
-
-
     }
+
+    public void pizza_status(float percentage,Canvas canvas)
+    {
+        float angle = (float) ((percentage * 100)*3.6);
+        Paint p = new Paint();
+        p.setColor(Color.BLUE);
+        p.setAlpha(100);
+        RectF rect = new RectF(0, 0, getWidth(), getHeight());
+        //rect.bringToFront();
+        canvas.drawArc(rect, 270,angle, true, p);
+    }
+
+
 
 }
