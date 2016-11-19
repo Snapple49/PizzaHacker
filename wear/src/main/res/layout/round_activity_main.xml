@@ -43,4 +43,19 @@
         android:textSize="24sp"
         android:textStyle="normal|bold" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/codeAcceptButton"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/percentageView"
+        tools:textColor="@color/blue"
+        android:textColor="@color/blue" />
+
+    <!--<com.hackergames.hackathon.pizzahacker.PizzaView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pizzaView"
+        />-->
+
 </RelativeLayout>

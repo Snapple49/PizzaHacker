@@ -29,17 +29,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends Activity {
-
+    private static final double maxCooking = 6*5-1;
+    private static double currentCooking = 0;
     private TextView mTextView;
     private JSONObject responseFromServer;
     private PropertyChangeListener pcl;
     MainActivity main;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private boolean startPinging = false;
+    private boolean startCooking = false;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private double percentageCooked;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         main = this;
@@ -92,6 +95,7 @@ public class MainActivity extends Activity {
         AsyncConnection as = new AsyncConnection(input, main);
         as.execute();
         TextView tv = (TextView) findViewById(R.id.jsonResponseField);
+        TextView pv = (TextView) findViewById(R.id.percentageView);
         if(responseFromServer.has("\"OrderStatus\"")) {
             try {
                 String orderStatus = responseFromServer.get("\"OrderStatus\"").toString().replaceAll("\"","").replaceAll(",","");
@@ -107,9 +111,13 @@ public class MainActivity extends Activity {
                     //Making
                     tv.setText("Making pizza");
                 }else if(orderStatus.equals("820")){
+                    startCooking = true;
                     //Cooking
                     tv.setText("Cooking pizza");
+                    pv.setText(""+(int)(100*getCookingPercentage()));
                 }else if(orderStatus.equals("830")){
+                    startCooking = false;
+                    currentCooking = 0;
                     //Ready instore
                     tv.setText("Pizza is ready");
                 }else if(orderStatus.equals("850")){
@@ -129,6 +137,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    public double getCookingPercentage(){
+        return currentCooking/maxCooking;
+    }
+
     /////////////////////////////////
     Handler h = new Handler();
     int delay = 1000; //15 seconds
@@ -142,6 +154,9 @@ public class MainActivity extends Activity {
                 //do something
                 if(startPinging) {
                     checkStatus();
+                }
+                if(startCooking){
+                    currentCooking+=1.0;
                 }
                 runnable=this;
 
