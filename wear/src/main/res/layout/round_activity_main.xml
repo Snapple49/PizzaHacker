@@ -14,13 +14,20 @@
         android:layout_margin="@dimen/screen_percentage_05"
         android:id="@+id/imageView" />
 -->
-    <Button
-        android:text="OK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/inputCode"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/codeAcceptButton" />
+
+
+
+
+
+
+
+
+
+    <com.hackergames.hackathon.pizzahacker.PizzaView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pizzaView"
+        />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +38,16 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textColor="@color/black"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:text="5665" />
+
+    <Button
+        android:text="OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputCode"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/codeAcceptButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,10 +59,13 @@
         android:textSize="24sp"
         android:textStyle="normal|bold" />
 
-    <com.hackergames.hackathon.pizzahacker.PizzaView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/pizzaView"
-        android:layout_margin="@dimen/screen_percentage_05"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/codeAcceptButton"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/percentageView"
+        tools:textColor="@color/blue"
+        android:textColor="@color/blue" />
 
 </RelativeLayout>

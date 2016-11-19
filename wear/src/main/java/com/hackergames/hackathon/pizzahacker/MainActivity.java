@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.wearable.view.WatchViewStub;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.MutableBoolean;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,21 +27,33 @@ import org.json.JSONObject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends Activity {
-
+    private static final double maxCooking = 6*5-1;
+    private static double currentCooking = 0;
     private TextView mTextView;
     private JSONObject responseFromServer;
     private PropertyChangeListener pcl;
     MainActivity main;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private boolean startPinging = false;
+    private boolean startCooking = false;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private double percentageCooked;
+    private int time;
+    private PizzaView pizzaview;
+    private Canvas pizzaCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         main = this;
@@ -61,7 +75,7 @@ public class MainActivity extends Activity {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mTextView = (TextView) stub.findViewById(R.id.text);
-
+                pizzaview = (PizzaView) stub.findViewById(R.id.pizzaView);
                 Button button = (Button)findViewById(R.id.codeAcceptButton);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -76,10 +90,17 @@ public class MainActivity extends Activity {
 
     public void setResponseJson(JSONObject response){
         this.responseFromServer = response;
-        System.out.println(response.toString());
+    }
+
+    public void setTimeBetween(int time){
+        this.time = time;
     }
 
     public void checkStatus(){
+        ((EditText)findViewById(R.id.inputCode)).setVisibility(View.INVISIBLE);
+        ((Button)findViewById(R.id.codeAcceptButton)).setVisibility(View.INVISIBLE);
+        toggleBoolean bool = new toggleBoolean(true);
+        bool.toggle();
         EditText t = (EditText)findViewById(R.id.inputCode);
         JSONObject input = new JSONObject();
         try {
@@ -89,9 +110,12 @@ public class MainActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        pizzaview.setPercentage((float)this.getCookingPercentage());
+        pizzaview.invalidate();
         AsyncConnection as = new AsyncConnection(input, main);
         as.execute();
         TextView tv = (TextView) findViewById(R.id.jsonResponseField);
+        TextView pv = (TextView) findViewById(R.id.percentageView);
         if(responseFromServer.has("\"OrderStatus\"")) {
             try {
                 String orderStatus = responseFromServer.get("\"OrderStatus\"").toString().replaceAll("\"","").replaceAll(",","");
@@ -107,13 +131,21 @@ public class MainActivity extends Activity {
                     //Making
                     tv.setText("Making pizza");
                 }else if(orderStatus.equals("820")){
+                    startCooking = true;
+                    pizzaview.setShouldAnimate(true);
                     //Cooking
                     tv.setText("Cooking pizza");
+                    pv.setText(""+(int)(100*getCookingPercentage()));
                 }else if(orderStatus.equals("830")){
+                    pizzaview.setShouldAnimate(false);
+                    startCooking = false;
+                    currentCooking = 0;
                     //Ready instore
                     tv.setText("Pizza is ready");
                 }else if(orderStatus.equals("850")){
                     //Leaving store
+                    AsyncConnection2 async2 = new AsyncConnection2("Nijmegen","Utrect",main);
+                    async2.execute();
                     tv.setText("Courier is on his way");
                 }else if(orderStatus.equals("867")){
                     //Order complete
@@ -127,6 +159,10 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public double getCookingPercentage(){
+        return currentCooking/maxCooking;
     }
 
     /////////////////////////////////
@@ -143,6 +179,9 @@ public class MainActivity extends Activity {
                 if(startPinging) {
                     checkStatus();
                 }
+                if(startCooking){
+                    currentCooking+=1.0;
+                }
                 runnable=this;
 
                 h.postDelayed(runnable, delay);
@@ -156,6 +195,16 @@ public class MainActivity extends Activity {
     protected void onPause() {
         h.removeCallbacks(runnable); //stop handler when activity not visible
         super.onPause();
+    }
+
+    class toggleBoolean{
+        boolean bool;
+        public toggleBoolean(boolean bool){
+            this.bool = bool;
+        }
+        public void toggle(){
+            bool = !bool;
+        }
     }
 /////////////////////////////////
 }
