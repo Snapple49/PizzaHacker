@@ -2,4 +2,7 @@
     <string name="app_name">Pizza Hacker</string>
     <string name="hello_round">Hi</string>
     <string name="hello_square">Hello Square World!</string>
+    <string name="title_activity_cooking">CookingActivity</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="title_activity_order_placed_at_store">OrderPlacedAtStoreActivity</string>
 </resources>

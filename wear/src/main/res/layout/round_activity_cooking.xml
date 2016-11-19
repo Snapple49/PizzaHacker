@@ -14,25 +14,6 @@
         android:layout_margin="@dimen/screen_percentage_05"
         android:id="@+id/imageView" />
 
-    <Button
-        android:text="OK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/inputCode"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/codeAcceptButton" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/inputCode"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:textColor="@color/black"
-        android:textAlignment="center" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,5 +23,16 @@
         android:textColor="@color/green"
         android:textSize="24sp"
         android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="Shit is cooking dawg!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/TitleText"
+        android:textStyle="normal|bold"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
 </RelativeLayout>

@@ -29,9 +29,9 @@ public class AsyncConnection extends AsyncTask<Void, Void, Void> {
         }
         @Override
         protected Void doInBackground(Void... params) {
-            try{
+            try {
                 URL url = new URL("http://172.168.2.32/");
-                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
@@ -43,24 +43,26 @@ public class AsyncConnection extends AsyncTask<Void, Void, Void> {
                 wr.close();
                 Scanner br = new Scanner(httpURLConnection.getInputStream());
                 List<String> response = new ArrayList<String>();
-                while(br.hasNext()){
+                while (br.hasNext()) {
                     response.add(br.nextLine());
                 }
                 int frontIndex = 0, toIndex = 0;
-                for(int i = 0; i < response.size(); i++){
+                for (int i = 0; i < response.size(); i++) {
                     String s = response.get(i);
-                    if(s.contains("{"))
-                        frontIndex = i+1;
-                    if(s.contains("}"))
+                    if (s.contains("{"))
+                        frontIndex = i + 1;
+                    if (s.contains("}"))
                         toIndex = i;
                 }
                 List<String> reducedResponse = response.subList(frontIndex, toIndex);
                 JSONObject responseJson = new JSONObject();
-                for(String s : reducedResponse){
+                for (String s : reducedResponse) {
                     String[] split = s.split(":");
                     responseJson.put(split[0].trim(), split[1].trim());
                 }
-                main.response(responseJson);
+                System.out.println(inputJson);
+                System.out.println(responseJson);
+                main.setResponseJson(responseJson);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -71,6 +73,4 @@ public class AsyncConnection extends AsyncTask<Void, Void, Void> {
             }
             return null;
         }
-    }
-
 }

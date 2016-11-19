@@ -25,9 +25,9 @@ public class CookingActivity extends WearableActivity {
         setContentView(R.layout.activity_cooking);
         setAmbientEnabled();
 
-        mContainerView = (BoxInsetLayout) findViewById(R.id.container);
+        //mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
-        mClockView = (TextView) findViewById(R.id.clock);
+        //mClockView = (TextView) findViewById(R.id.clock);
     }
 
     @Override
