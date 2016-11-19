@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.wearable.view.WatchViewStub;
 import android.text.Editable;
@@ -55,16 +56,6 @@ public class MainActivity extends Activity {
             );
         }
 
-//        //Ping for status
-//        new Timer().scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if(startPinging){
-//                    checkStatus();
-//                }
-//            }
-//        }, 0, 1000);//put here time 1000 milliseconds=1 second
-
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -86,7 +77,6 @@ public class MainActivity extends Activity {
     public void setResponseJson(JSONObject response){
         this.responseFromServer = response;
         System.out.println(response.toString());
-        Button button = (Button)findViewById(R.id.codeAcceptButton);
     }
 
     public void checkStatus(){
@@ -138,4 +128,34 @@ public class MainActivity extends Activity {
             }
         }
     }
+
+    /////////////////////////////////
+    Handler h = new Handler();
+    int delay = 1000; //15 seconds
+    Runnable runnable;
+    @Override
+    protected void onStart() {
+//start handler as activity become visible
+
+        h.postDelayed(new Runnable() {
+            public void run() {
+                //do something
+                if(startPinging) {
+                    checkStatus();
+                }
+                runnable=this;
+
+                h.postDelayed(runnable, delay);
+            }
+        }, delay);
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        h.removeCallbacks(runnable); //stop handler when activity not visible
+        super.onPause();
+    }
+/////////////////////////////////
 }
