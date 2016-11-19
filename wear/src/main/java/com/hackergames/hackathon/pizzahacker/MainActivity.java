@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
+import static com.hackergames.hackathon.pizzahacker.R.drawable.basic_pizza;
+
 public class MainActivity extends Activity {
 
     private TextView mTextView;
+
+    private PizzaView pizzaView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +21,19 @@ public class MainActivity extends Activity {
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                //mTextView = (TextView) stub.findViewById(R.id.text);
+                pizzaView = (PizzaView) stub.findViewById(R.id.pizzaView);
             }
         });
+
+        /*pizzaView.pizzaParts.add(getDrawable(basic_pizza));
+        pizzaView.pizzaParts.add(getDrawable(R.drawable.pizza_sauce));
+        pizzaView.pizzaParts.add(getDrawable(R.drawable.pizza_cheese));
+        pizzaView.pizzaParts.add(getDrawable(R.drawable.topping_pepperoni));
+        */
+
+
     }
+
+
 }
