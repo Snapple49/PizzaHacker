@@ -6,6 +6,13 @@
     tools:context="com.hackergames.hackathon.pizzahacker.MainActivity"
     tools:deviceIds="wear_round">
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/pizza_base"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/screen_percentage_05"/>
+
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
