@@ -4,18 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.w3c.dom.Attr;
-
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by olive on 2016-11-19.
@@ -23,7 +21,25 @@ import java.util.List;
 
 class PizzaView extends View {
 
-    public List<Drawable> pizzaParts;
+    class ToggleBoolean {
+        boolean bool;
+
+        public ToggleBoolean(boolean bool){
+            this.bool = bool;
+        }
+
+        public void toggle(){
+            bool = !bool;
+        }
+    }
+
+    public HashMap<Drawable, ToggleBoolean> pizzaParts;
+    final Drawable basic_pizza = getResources().getDrawable(R.drawable.basic_pizza, null);
+    final Drawable pizza_base = getResources().getDrawable(R.drawable.pizza_base, null);
+    final Drawable pizza_sauce = getResources().getDrawable(R.drawable.pizza_sauce, null);
+    final Drawable pizza_cheese = getResources().getDrawable(R.drawable.pizza_cheese, null);
+    final Drawable toppings_pepperoni = getResources().getDrawable(R.drawable.topping_pepperoni, null);
+    final Drawable toppings_fish = getResources().getDrawable(R.drawable.topping_fish, null);
 
     public PizzaView(Context context) {
         super(context);
@@ -40,7 +56,28 @@ class PizzaView extends View {
         init(attrs, defStyle);
     }
 
+    private void setBoundsPercentage(Drawable drawable, int percent){
+        drawable.setBounds((getWidth()*percent)/100, (getHeight()*percent)/100, (getWidth()*(100-percent))/100, (getHeight()*(100-percent))/100);
+    }
+
     private void init(AttributeSet attrs, int defStyle){
+        pizzaParts = new LinkedHashMap<Drawable, ToggleBoolean>();
+        pizzaParts.put(basic_pizza, new ToggleBoolean(false));
+        pizzaParts.put(pizza_base, new ToggleBoolean(true));
+        pizzaParts.put(pizza_sauce, new ToggleBoolean(true));
+        pizzaParts.put(pizza_cheese, new ToggleBoolean(false));
+        pizzaParts.put(toppings_pepperoni, new ToggleBoolean(true));
+        pizzaParts.put(toppings_fish, new ToggleBoolean(true));
+
+        setBoundsPercentage(basic_pizza, 0);
+        setBoundsPercentage(pizza_base, 0);
+        setBoundsPercentage(pizza_sauce, 4);
+        setBoundsPercentage(pizza_cheese, 6);
+        setBoundsPercentage(toppings_pepperoni, 45);
+        setBoundsPercentage(toppings_fish, 45);
+
+
+
 
     }
 
@@ -54,19 +91,23 @@ class PizzaView extends View {
     @Override
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        Paint p = new Paint();
-        RectF rect = new RectF(0, 0, getWidth(), getHeight());
 
-        p.setColor(Color.BLUE);
-        canvas.drawArc(rect, 90, 45, true, p);
-        /*
-        for(Drawable d:pizzaParts){
-            d.draw(canvas);
+        setBoundsPercentage(basic_pizza, 0);
+        setBoundsPercentage(pizza_base, 0);
+        setBoundsPercentage(pizza_sauce, 4);
+        setBoundsPercentage(pizza_cheese, 6);
+        setBoundsPercentage(toppings_pepperoni, 45);
+        setBoundsPercentage(toppings_fish, 45);
+
+
+        for(Map.Entry<Drawable, ToggleBoolean> e: pizzaParts.entrySet()){
+            if(e.getValue().bool){
+                e.getKey().draw(canvas);
+            }
         }
-        */
 
 
-        //rect.set(0,0,canvas.getWidth()/2, canvas.getHeight()/2);
+
 
 
     }
