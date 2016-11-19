@@ -13,4 +13,23 @@
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/screen_percentage_05"/>
 
+    <Button
+        android:text="OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputCode"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/codeAcceptButton" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/inputCode"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textColor="@color/black"
+        android:textAlignment="center" />
+
 </RelativeLayout>
