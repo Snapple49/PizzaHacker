@@ -1,0 +1,2 @@
+This API needs to be hosted with a webserver like apache.
+The easyest way to do this is to install XAMPP and copy the Index.php and config.txt file into the htdocs folder in the XAMPP intallation folder.
